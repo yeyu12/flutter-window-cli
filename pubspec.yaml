@@ -29,6 +29,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  system_tray: ^0.0.9
+  bitsdojo_window: 0.1.1+1
+  english_words: ^4.0.0
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -56,6 +59,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
