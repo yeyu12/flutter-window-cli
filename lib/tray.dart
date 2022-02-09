@@ -4,16 +4,16 @@ import 'package:system_tray/system_tray.dart';
 import 'dart:io';
 import 'dart:async';
 
+import 'package:window_manager/window_manager.dart';
+
 class Tray {
   bool _toogleTrayIcon = true;
   final SystemTray _systemTray = SystemTray();
-  final AppWindow _appWindow = AppWindow();
   Timer? _timer;
 
   Tray._internal();
 
   factory Tray() => _instance;
-
   static late final Tray _instance = Tray._internal();
 
   void initState() {
@@ -22,22 +22,22 @@ class Tray {
 
   Future<void> initSystemTray() async {
     String path =
-    Platform.isWindows ? 'assets/app_icon.ico' : 'assets/app_icon.png';
+        Platform.isWindows ? 'assets/app_icon.ico' : 'assets/app_icon.png';
     if (Platform.isMacOS) {
       path = 'AppIcon';
     }
 
     final menu = [
-      MenuItem(label: 'Show', onClicked: _appWindow.show),
-      MenuItem(label: 'Hide', onClicked: _appWindow.hide),
+      MenuItem(label: '显示', onClicked: windowManager.show),
+      MenuItem(label: '隐藏', onClicked: windowManager.hide),
       MenuItem(
-        label: 'Start flash tray icon',
+        label: '开启系统栏闪烁',
         onClicked: () {
           debugPrint("Start flash tray icon");
 
           _timer ??= Timer.periodic(
             const Duration(milliseconds: 500),
-                (timer) {
+            (timer) {
               _toogleTrayIcon = !_toogleTrayIcon;
               _systemTray.setSystemTrayInfo(
                 iconPath: _toogleTrayIcon ? "" : path,
@@ -47,7 +47,7 @@ class Tray {
         },
       ),
       MenuItem(
-        label: 'Stop flash tray icon',
+        label: '关闭系统栏闪烁',
         onClicked: () {
           debugPrint("Stop flash tray icon");
 
@@ -61,7 +61,7 @@ class Tray {
       ),
       MenuSeparator(),
       SubMenu(
-        label: "Test API",
+        label: "测试",
         children: [
           SubMenu(
             label: "setSystemTrayInfo",
@@ -102,8 +102,8 @@ class Tray {
       ),
       MenuSeparator(),
       MenuItem(
-        label: 'Exit',
-        onClicked: _appWindow.close,
+        label: '退出',
+        onClicked: () => exit(0),
       ),
     ];
 
@@ -111,7 +111,7 @@ class Tray {
     await _systemTray.initSystemTray(
       title: "system tray",
       iconPath: path,
-      toolTip: "How to use system tray with Flutter",
+      toolTip: "这里是系统通知栏标题",
     );
 
     await _systemTray.setContextMenu(menu);
@@ -121,7 +121,7 @@ class Tray {
       debugPrint("eventName: $eventName");
       if (eventName == "leftMouseDown") {
       } else if (eventName == "leftMouseUp") {
-        _appWindow.show();
+        windowManager.show();
       } else if (eventName == "rightMouseDown") {
       } else if (eventName == "rightMouseUp") {
         _systemTray.popUpContextMenu();

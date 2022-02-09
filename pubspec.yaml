@@ -30,8 +30,8 @@ dependencies:
   flutter:
     sdk: flutter
   system_tray: ^0.0.9
-  bitsdojo_window: 0.1.1+1
   english_words: ^4.0.0
+  window_manager: ^0.1.5
 
 
   # The following adds the Cupertino Icons font to your application.

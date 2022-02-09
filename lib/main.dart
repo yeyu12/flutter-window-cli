@@ -1,23 +1,26 @@
-import 'dart:io';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter_window_cli/tray.dart';
+import 'package:window_manager/window_manager.dart';
 
 
 void main() async {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  // 必须加上这一行。
+  await windowManager.ensureInitialized();
 
-  doWhenWindowReady(() {
-    final win = appWindow;
-    const initialSize = Size(600, 450);
-    win.minSize = initialSize;
-    win.size = initialSize;
-    win.alignment = Alignment.center;
-    win.title = "How to use system tray with Flutter";
-    win.show();
+  // Use it only after calling `hiddenWindowAtLaunch`
+  windowManager.waitUntilReadyToShow().then((_) async{
+    // 隐藏窗口标题栏
+    // await windowManager.setTitleBarStyle('hidden');
+    await windowManager.hide();
+    await windowManager.setSkipTaskbar(false);
+    await windowManager.setSize(const Size(800, 600));
+    await windowManager.center();
   });
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -47,12 +50,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: true,
       home: Scaffold(
-        body: WindowBorder(
-          color: const Color(0xFFFFFFFF),
-          width: 0,
-          child: Row(
-          ),
-        ),
+        body:Container()
       ),
     );
   }
